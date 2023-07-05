@@ -93,14 +93,12 @@ function App() {
           options={{
             headerShown: true,
             headerTitle: 'To Do List App',
-
             headerStyle: {
               //shadowOpacity: 0,
               ...Platform.select({
                 android: {elevation: 0},
                 ios: {shadowOpacity: 0},
               }),
-
               backgroundColor: '#879dd9',
             },
             headerTintColor: 'white',

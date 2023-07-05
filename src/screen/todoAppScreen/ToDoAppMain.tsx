@@ -16,59 +16,156 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {
   SafeAreaInsetsContext,
   SafeAreaProvider,
-  SafeAreaView,
 } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RootStackParamList} from '../../../App';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 const PrimaryColor = '#879dd9';
-function PlanCard() {
-  return (
-    <View style={styles.planCardStyle}>
-      <View style={styles.cardPositionStyle}>
-        <View style={{flexDirection: 'row'}}>
-          <Text>adsf</Text>
-          <Text style={styles.planCardContentTextStyle}>밥먹기,똥싸기,</Text>
+function PlanCard(props: any) {
+  const {selectDate, setSelectDate, planData, setPlanData} = props;
+
+  if (planData != null) console.log(planData[1]);
+  return planData != 'no plan data' ? (
+    <FlatList
+      data={planData}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({item}) => (
+        <View style={styles.planCardStyle}>
+          <View style={styles.cardPositionStyle}>
+            <View style={styles.checkboxAndTextContainer}>
+              <BouncyCheckbox
+                style={
+                  {
+                    //alignSelf: 'flex-end'
+                  }
+                }
+                size={20}
+                fillColor="indigo"
+                unfillColor="#FFFFFF"
+                hitSlop={{top: 5, bottom: 5, left: 0, right: 0}}
+                iconStyle={{borderColor: 'red'}}
+                onPress={(isChecked: boolean) => {}}></BouncyCheckbox>
+              <Text style={styles.planCardContentTextStyle}>
+                {item.description}
+              </Text>
+            </View>
+            <View style={styles.iconContainer}>
+              <Pressable>
+                <Icon name="close-circle-outline" color="white" size={22}>
+                  {' '}
+                </Icon>
+              </Pressable>
+            </View>
+          </View>
         </View>
-        <Pressable
-          onPress={() => {
-            console.log('취소');
-          }}>
-          <Icon name="close-circle-outline" color="white" size={22} style={{}}>
-            {' '}
-          </Icon>
-        </Pressable>
-      </View>
-    </View>
+      )}></FlatList>
+  ) : (
+    <Text
+      style={{
+        flexShrink: 1,
+        alignItems: 'center',
+        textAlign: 'center',
+
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+        paddingVertical: 24,
+        borderWidth: 1,
+        borderColor: 'white',
+        marginHorizontal: 16,
+        borderRadius: 12,
+        marginVertical: 16,
+      }}>
+      해당 날짜에 추가한 일정이 없습니다.
+    </Text>
   );
 }
 function CalendarView(props: any) {
-  const selectDate = props.selectDate;
-  const setSelectDate = props.setSelectDate;
-  const markedDates = {
-    '2023-07-27': {marked: true},
-    '2023-07-28': {marked: true},
-    '2023-07-01': {marked: true},
-  };
+  const {selectDate, setSelectDate, setPlanData} = props;
 
+  // const markedDates = {
+  //   '2023-07-27': {marked: true},
+  //   '2023-07-28': {marked: true},
+  //   '2023-07-01': {marked: true},
+  // };
+
+  const [planMarkDate, setPlanMarkDate] = useState({});
   useEffect(() => {
-    console.log(selectDate);
-  }, [selectDate]);
+    const fetchData = async () => {
+      const userEmail = await EncryptedStorage.getItem('userEmail');
+      const response = await axios.get(
+        'http://43.201.116.97:3000/todoApp/getPlanDate',
+        {
+          params: {
+            userEmail: userEmail,
+          },
+        },
+      );
+      let data = Object.values(response.data) as {selectDate: string}[]; // response.data는 서버에서 받은 데이터입니다.
+
+      // markedDates 객체를 생성합니다.
+      let newMarkedDates: {[date: string]: {marked: boolean}} = {};
+      data.forEach(item => {
+        console.log(data);
+        newMarkedDates[item.selectDate] = {marked: true};
+      });
+
+      // markedDates 상태를 업데이트합니다.
+      setMarkedDates(newMarkedDates);
+    };
+    fetchData();
+  }, []);
+  const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
+
+  const [planedResDate, setPlanedResDate] = useState<string | null>(null);
   return (
     <Calendar
       style={styles.calendar}
       markedDates={markedDates}
-      onDayPress={day => {
-        setSelectDate(day.dateString);
-        const userEmail = EncryptedStorage.getItem('userEmail');
+      // 처음 상태 설정에서 {}가 아니라 초기값을 줍니다.
 
-        //일정 조회
-        axios.post('http://43.201.116.97:3000/todoApp/user/getPlan', {
-          userEmail,
-          selectDate,
-        });
+      onDayPress={async day => {
+        const userEmail = await EncryptedStorage.getItem('userEmail');
 
-        //console.log(selectDate);
+        // 이전에 선택된 날짜의 상태를 초기화하고 새로운 날짜를 강조합니다.
+        setMarkedDates((prevState: Record<string, any>) => ({
+          ...prevState,
+          // 이전에 선택된 날짜가 있다면 초기 상태로 되돌립니다.
+          ...(planedResDate && {
+            [planedResDate]: {
+              ...prevState[planedResDate],
+              selected: false,
+              selectedColor: undefined,
+            },
+          }),
+          // 새로 선택된 날짜를 강조합니다.
+          [day.dateString]: {
+            ...prevState[day.dateString],
+            selected: true,
+            selectedColor: PrimaryColor,
+          },
+        }));
+
+        // 새로 선택된 날짜를 저장합니다.
+        setPlanedResDate(day.dateString);
+
+        const planDataResponse = await axios.get(
+          'http://43.201.116.97:3000/todoApp/getPlan',
+          {
+            params: {
+              selectDate: day.dateString,
+              userEmail,
+            },
+          },
+        );
+        let data = planDataResponse.data; // response.data는 서버에서 받은 데이터입니다.
+        let dataArray = Object.values(data);
+        if (data === 'no plan data') {
+          setPlanData('no plan data');
+        } else {
+          setPlanData(dataArray);
+        }
       }}
       theme={{
         selectedDayBackgroundColor: 'red',
@@ -88,12 +185,14 @@ function PlannerView({
   const [selectDate, setSelectDate] = useState('0000-00-00');
   //console.log(selectDate);
   const onAddPlan = useCallback(async () => {
+    console.log(selectDate);
     if (selectDate != '0000-00-00') {
       navigation.navigate('AddPlanScreen', {selectDate: selectDate});
     } else {
       Alert.alert('알림', '추가할 날짜를 먼저 선택해주세요!');
     }
   }, [selectDate]);
+  const [planData, setPlanData] = useState(null);
   return (
     <SafeAreaProvider>
       <SafeAreaInsetsContext.Consumer>
@@ -110,15 +209,17 @@ function PlannerView({
             <View>
               <CalendarView
                 selectDate={selectDate}
-                setSelectDate={setSelectDate}></CalendarView>
-              <ScrollView>
-                <PlanCard></PlanCard>
-                <PlanCard></PlanCard>
-                <PlanCard></PlanCard>
-                <PlanCard></PlanCard>
-                <PlanCard></PlanCard>
-                <PlanCard></PlanCard>
-              </ScrollView>
+                setSelectDate={setSelectDate}
+                planData={planData} // 오타를 수정했습니다.
+                setPlanData={setPlanData}
+              />
+              <PlanCard
+                selectDate={selectDate}
+                setSelectDate={setSelectDate}
+                planData={planData} // 오타를 수정했습니다.
+                setPlanData={setPlanData}
+              />
+
               <View style={styles.addBtnStyle}>
                 <Pressable onPress={onAddPlan}>
                   <Text style={styles.addBtnTextStyle}>추가버튼</Text>
@@ -138,10 +239,7 @@ const styles = StyleSheet.create({
     backgroundColor: PrimaryColor,
     flex: 1,
   },
-  cardPositionStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+
   defaultTextStyle: {
     color: '#e0e0e0',
     fontSize: 24,
@@ -167,15 +265,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingVertical: 4,
   },
-  planCardContentTextStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-    paddingVertical: 4,
-  },
+
   addBtnStyle: {
     alignItems: 'center',
-    //backgroundColor: 'purple',
+
+    marginVertical: 10, //backgroundColor: 'purple',
   },
   addBtnTextStyle: {
     fontSize: 16,
@@ -183,9 +277,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     borderRadius: 12,
-    margin: 12,
+
     padding: 12,
     fontWeight: 'bold',
+  },
+  cardPositionStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  checkboxAndTextContainer: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+
+  planCardContentTextStyle: {
+    flexShrink: 1,
+    flexWrap: 'wrap',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingVertical: 4,
+  },
+
+  iconContainer: {
+    justifyContent: 'center',
   },
 });
 export default PlannerView;
