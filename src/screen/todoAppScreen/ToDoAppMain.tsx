@@ -51,7 +51,10 @@ function PlanCard(props: any) {
               </Text>
             </View>
             <View style={styles.iconContainer}>
-              <Pressable>
+              <Pressable
+                onPress={() => {
+                  console.log('취소');
+                }}>
                 <Icon name="close-circle-outline" color="white" size={22}>
                   {' '}
                 </Icon>
@@ -128,6 +131,9 @@ function CalendarView(props: any) {
       onDayPress={async day => {
         const userEmail = await EncryptedStorage.getItem('userEmail');
 
+        setSelectDate(day.dateString);
+
+        console.log(selectDate);
         // 이전에 선택된 날짜의 상태를 초기화하고 새로운 날짜를 강조합니다.
         setMarkedDates((prevState: Record<string, any>) => ({
           ...prevState,
@@ -192,6 +198,14 @@ function PlannerView({
       Alert.alert('알림', '추가할 날짜를 먼저 선택해주세요!');
     }
   }, [selectDate]);
+  const logOut = useCallback(async () => {
+    await EncryptedStorage.setItem('autoLogin', 'false');
+    Alert.alert('알림', '로그아웃이 완료되었습니다.');
+
+    for (let i = 0; i < 2; i++) {
+      navigation.goBack();
+    }
+  }, []);
   const [planData, setPlanData] = useState(null);
   return (
     <SafeAreaProvider>
@@ -221,6 +235,9 @@ function PlannerView({
               />
 
               <View style={styles.addBtnStyle}>
+                <Pressable onPress={logOut}>
+                  <Text style={styles.addBtnTextStyle}>로그아웃</Text>
+                </Pressable>
                 <Pressable onPress={onAddPlan}>
                   <Text style={styles.addBtnTextStyle}>추가버튼</Text>
                 </Pressable>
@@ -268,7 +285,9 @@ const styles = StyleSheet.create({
 
   addBtnStyle: {
     alignItems: 'center',
-
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    //paddingHorizontal: 44,
     marginVertical: 10, //backgroundColor: 'purple',
   },
   addBtnTextStyle: {

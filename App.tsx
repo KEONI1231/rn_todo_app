@@ -121,6 +121,7 @@ function App() {
           name="ToDoAppMain"
           component={PlannerView}
           options={{
+            gestureEnabled: false,
             headerShown: false,
           }}
         />

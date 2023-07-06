@@ -1,4 +1,4 @@
-import react, {useCallback, useRef, useState} from 'react';
+import react, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,14 +12,14 @@ import {
   ScrollView,
 } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {Calendar} from 'react-native-calendars';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../App';
 import {NavigationProp} from '@react-navigation/native';
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
+let encryptedEmail;
+let encryptedPassword;
 function ToDoLoginScreen({
   navigation,
 }: {
@@ -30,36 +30,77 @@ function ToDoLoginScreen({
 
   const emailRef = useRef<TextInput | null>(null);
   const pwRef = useRef<TextInput | null>(null);
-
+  const [autoLoginValue, setAutoLoginValue] = useState('false');
   //로그인 파트
-  const onSubmit = useCallback(async () => {
-    try {
+  useEffect(() => {
+    const tryAutoLogin = async () => {
+      //await EncryptedStorage.setItem('autoLogin', 'false');
+      const userLogin = await EncryptedStorage.getItem('autoLogin');
+      console.log(userLogin);
+      if (userLogin == 'true') {
+        //await EncryptedStorage.setItem('autoLogin', 'true');
+        encryptedEmail = await EncryptedStorage.getItem('userEmail');
+        encryptedPassword = await EncryptedStorage.getItem('userPassword');
+        // await Promise.all([
+        //   setEmail(encryptedEmail!.toString()),
+        //   setPw(encryptedPassword!.toString()),
+        // ]);
+        //console.log(email);
+        //console.log(pw);
+
+        onSubmit(encryptedEmail!.toString(), encryptedPassword!.toString());
+      } else if (userLogin == null || userLogin == 'false') {
+        await EncryptedStorage.setItem('autoLogin', 'false');
+      }
+    };
+    tryAutoLogin();
+  }, []);
+  const onChangeAutoLoginTrue = useCallback(async () => {
+    setAutoLoginValue('true');
+    console.log('true');
+    await EncryptedStorage.setItem('autoLogin', 'true');
+  }, []);
+  const onChangeAutoLoginFalse = useCallback(async () => {
+    setAutoLoginValue('false');
+    console.log('false');
+    await EncryptedStorage.setItem('autoLogin', 'false');
+  }, []);
+  const onSubmit = useCallback(
+    async (email: string, pw: string) => {
       //console.log(email);
       //console.log(pw);
-      const response = await axios.post(
-        'http://43.201.116.97:3000/todoApp/user/login',
-        {
-          email,
-          pw,
-        },
-      );
-      if (response.data == 'no user info') {
-        Alert.alert('알림', '가입된 유저가 없습니다.');
-        console.log(response.data);
-      } else {
-        //네비게이션
-        await EncryptedStorage.setItem('userEmail', response.data.email);
-        //const testdata = await EncryptedStorage.getItem('userEmail');
-        //console.log(response.data.email);
-        //console.log(testdata);
-        Alert.alert('알림', '로그인 완료되었습니다.');
-        navigation.navigate('ToDoAppMain');
-        //console.log(response.data);
+      try {
+        //console.log(email);
+        //console.log(pw);
+        const response = await axios.post(
+          'http://43.201.116.97:3000/todoApp/user/login',
+          {
+            email,
+            pw,
+          },
+        );
+        if (response.data == 'no user info') {
+          Alert.alert('알림', '가입된 유저가 없습니다.');
+          console.log(response.data);
+        } else {
+          //네비게이션
+          console.log(response.data);
+          await EncryptedStorage.setItem('userEmail', response.data.email);
+
+          await EncryptedStorage.setItem('userPassword', response.data.pw);
+          //const testdata = await EncryptedStorage.getItem('userEmail');
+          //console.log(response.data.email);
+          //console.log(testdata);
+          Alert.alert('알림', '로그인 완료되었습니다.');
+          navigation.navigate('ToDoAppMain');
+          //console.log(response.data);
+        }
+      } catch (e) {
+      } finally {
       }
-    } catch (e) {
-    } finally {
-    }
-  }, [email, pw]);
+    },
+    [email, pw],
+  );
   const onChangeEmail = useCallback((text: string) => {
     setEmail(text.trim());
   }, []);
@@ -90,7 +131,7 @@ function ToDoLoginScreen({
               placeholder="password"
               placeholderTextColor={'gray'}
               autoComplete="email"
-              onSubmitEditing={onSubmit}
+              onSubmitEditing={() => onSubmit(email, pw)}
               onChangeText={onChangePw}
               value={pw}
               ref={pwRef}
@@ -105,13 +146,21 @@ function ToDoLoginScreen({
                 unfillColor="#FFFFFF"
                 hitSlop={{top: 5, bottom: 5, left: 0, right: 0}}
                 iconStyle={{borderColor: 'red'}}
-                onPress={(isChecked: boolean) => {}}></BouncyCheckbox>
+                onPress={async (isChecked: boolean) => {
+                  if (isChecked == false) {
+                    onChangeAutoLoginFalse();
+                  } else {
+                    onChangeAutoLoginTrue();
+                  }
+                }}></BouncyCheckbox>
               <Text style={{textAlign: 'center'}}>Remember me</Text>
             </View>
           </View>
         </ScrollView>
         <View style={styles.bottomViewArea}>
-          <Pressable style={styles.loginBtnStyle} onPress={onSubmit}>
+          <Pressable
+            style={styles.loginBtnStyle}
+            onPress={() => onSubmit(email, pw)}>
             <Text style={styles.loginBtnTextStyle}>Log In</Text>
           </Pressable>
           <Pressable
