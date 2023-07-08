@@ -86,7 +86,6 @@ function ToDoLoginScreen({
           //네비게이션
           console.log(response.data);
           await EncryptedStorage.setItem('userEmail', response.data.email);
-
           await EncryptedStorage.setItem('userPassword', response.data.pw);
           //const testdata = await EncryptedStorage.getItem('userEmail');
           //console.log(response.data.email);

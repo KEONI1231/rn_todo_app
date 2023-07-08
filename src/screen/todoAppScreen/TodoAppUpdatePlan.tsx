@@ -1,41 +1,43 @@
+import {StackScreenProps} from '@react-navigation/stack';
+import {useCallback, useRef, useState} from 'react';
 import {
-  Alert,
   Dimensions,
   Keyboard,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../../App';
-import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
-import {useCallback, useRef, useState} from 'react';
-import {Int32} from 'react-native/Libraries/Types/CodegenTypes';
-import axios from 'axios';
-import EncryptedStorage from 'react-native-encrypted-storage';
-
-const PrimaryColor = '#879dd9';
 
 export type AddPlanScreenProps = StackScreenProps<
   RootStackParamList,
-  'AddPlanScreen'
+  'UpdatePlan'
 >;
 
-function AddPlanScreen({navigation, route}: any) {
+const PrimaryColor = '#879dd9';
+function UpdatePlan({navigation, route}: any) {
   const selectDate = route.params.selectDate;
+  const id = route.params.id;
+  const description = route.params.description;
+  const oldStartTime = route.params.startTime;
+  const oldEndTime = route.params.endTime;
+
+  console.log(selectDate);
+  console.log(description);
+  console.log(id);
+  console.log(oldStartTime);
+  console.log(oldEndTime);
+
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const [content, setContent] = useState('');
 
-  const startTimeRef = useRef<TextInput | null>(null);
   const endTimeRef = useRef<TextInput | null>(null);
   const contentRef = useRef<TextInput | null>(null);
-  const check = false;
+
   const onChangeStartTime = useCallback((text: string) => {
     setStartTime(text ? parseInt(text) : 0);
   }, []);
@@ -45,43 +47,14 @@ function AddPlanScreen({navigation, route}: any) {
   const onChangeContent = useCallback((text: string) => {
     setContent(text);
   }, []);
-  const onSubmit = useCallback(async () => {
-    const userEmail = await EncryptedStorage.getItem('userEmail');
-    if (startTime < 0 || startTime > 24) {
-      return Alert.alert('알림', '시작 시간을 0이상 24이하로 설정하세요');
-    } else if (endTime < 0 || endTime > 24) {
-      return Alert.alert(
-        '알림',
-        '끝나는 시간을 시작 시간보다 나중으로 설정하세요',
-      );
-    } else if (endTime > 24) {
-      return Alert.alert('알림', '끝 나는 시간을 0이상 24이하로 설정하세요');
-    }
-    const response = await axios.post(
-      'http://43.201.116.97:3000/todoApp/create/plan',
-      {
-        startTime,
-        endTime,
-        content,
-        check,
-        userEmail,
-        selectDate,
-      },
-    );
-    if (response.data == '에러 발생!') {
-      Alert.alert('알림', '에러가 발생했습니다.');
-      console.log('에러');
-    } else if (response.data == '저장 성공!') {
-      navigation.goBack();
-      Alert.alert('알림', '일정 등록 완료!');
-      console.log('성공');
-    }
+  const onSubmit = useCallback(() => {
+    console.log(id);
   }, [startTime, endTime, content]);
-  // 'rount' 대신 'route' 사용
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.safeAreaStyle}>
         <Text style={styles.dateTextStyle}>날짜 : {selectDate}</Text>
+        <Text style={styles.dateTextStyle}>기존 내용 : </Text>
         <View style={styles.setTimeRowStyle}>
           <View style={styles.setTimeStyle}>
             <Text style={styles.defaultTextStyle}>시작 시간</Text>
@@ -133,6 +106,7 @@ function AddPlanScreen({navigation, route}: any) {
     </TouchableWithoutFeedback>
   );
 }
+
 const styles = StyleSheet.create({
   safeAreaStyle: {
     backgroundColor: PrimaryColor,
@@ -206,4 +180,4 @@ const styles = StyleSheet.create({
     //marginBottom: 32,
   },
 });
-export default AddPlanScreen;
+export default UpdatePlan;

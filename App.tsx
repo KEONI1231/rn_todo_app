@@ -30,6 +30,7 @@ import ToDoLoginScreen from './src/screen/todoAppScreen/ToDoApp';
 import ToDoSignUpScreen from './src/screen/todoAppScreen/ToDoSignUp';
 import PlannerView from './src/screen/todoAppScreen/ToDoAppMain';
 import AddPlanScreen from './src/screen/todoAppScreen/TodoAppAddPlan';
+import UpdatePlan from './src/screen/todoAppScreen/TodoAppUpdatePlan';
 //import DetailScreen from './src/screen/ToDoApp';
 
 //아래는 스택을 등록하는 부분. 그냥 외워야 할듯.
@@ -41,6 +42,13 @@ export type RootStackParamList = {
   ToDoSignUpScreen: undefined;
   ToDoAppMain: undefined;
   AddPlanScreen: {selectDate: string};
+  UpdatePlan: {
+    selectDate: string;
+    id: string;
+    description: string;
+    startTime: number;
+    endTime: number;
+  };
 };
 //여기까지
 function HomeScreen({
@@ -123,6 +131,19 @@ function App() {
           options={{
             gestureEnabled: false,
             headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UpdatePlan"
+          component={UpdatePlan}
+          options={{
+            headerShown: true,
+            headerTitle: '일정 추가',
+            headerBackTitle: 'back',
+            headerStyle: {
+              backgroundColor: '#879dd9',
+            },
+            headerTintColor: 'white',
           }}
         />
         <Stack.Screen
