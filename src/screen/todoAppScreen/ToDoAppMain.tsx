@@ -17,10 +17,7 @@ import {
   SafeAreaInsetsContext,
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {RootStackParamList} from '../../../App';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {Int32} from 'react-native/Libraries/Types/CodegenTypes';
 
 const PrimaryColor = '#879dd9';
 function deletePlanAlert(id: any) {
@@ -250,12 +247,9 @@ function CalendarView(props: any) {
       style={styles.calendar}
       markedDates={markedDates}
       // 처음 상태 설정에서 {}가 아니라 초기값을 줍니다.
-
       onDayPress={async day => {
         const userEmail = await EncryptedStorage.getItem('userEmail');
-
         setSelectDate(day.dateString);
-
         //console.log(selectDate);
         // 이전에 선택된 날짜의 상태를 초기화하고 새로운 날짜를 강조합니다.
         setMarkedDates((prevState: Record<string, any>) => ({
@@ -275,7 +269,6 @@ function CalendarView(props: any) {
             selectedColor: PrimaryColor,
           },
         }));
-
         // 새로 선택된 날짜를 저장합니다.
         setPlanedResDate(day.dateString);
 
@@ -288,7 +281,6 @@ function CalendarView(props: any) {
             },
           },
         );
-
         let data = planDataResponse.data; // response.data는 서버에서 받은 데이터입니다.
         let dataArray = Object.values(data);
         if (data === 'no plan data') {

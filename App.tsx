@@ -25,12 +25,15 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import DetailScreen from './src/screen/todoAppScreen/ToDoApp';
-import ToDoLoginScreen from './src/screen/todoAppScreen/ToDoApp';
+import ToDoLoginScreen from './src/screen/todoAppScreen/ToDoAppLogin';
 import ToDoSignUpScreen from './src/screen/todoAppScreen/ToDoSignUp';
 import PlannerView from './src/screen/todoAppScreen/ToDoAppMain';
 import AddPlanScreen from './src/screen/todoAppScreen/TodoAppAddPlan';
 import UpdatePlan from './src/screen/todoAppScreen/TodoAppUpdatePlan';
+import SmallChatAppHome from './src/screen/smallChatApp/SmallChatLogin';
+import SmallChatMain from './src/screen/smallChatApp/SmallChatMain';
+import SmallChatTabNavi from './src/Navigator/BottomTabNavigator';
+
 //import DetailScreen from './src/screen/ToDoApp';
 
 //아래는 스택을 등록하는 부분. 그냥 외워야 할듯.
@@ -49,7 +52,12 @@ export type RootStackParamList = {
     startTime: number;
     endTime: number;
   };
+  SmallChatAppHome: undefined;
+  SmallChatMain: undefined;
+  SmallChatTabNavi: undefined;
 };
+const BrightColor = '#fff6db';
+const PrimaryBlue = '#879dd9';
 //여기까지
 function HomeScreen({
   navigation,
@@ -73,6 +81,9 @@ function HomeScreen({
         </Icon>
         <Pressable onPress={() => navigation.navigate('ToDoLoginScreen')}>
           <Text style={styles.PressableTextStyle}>First todo list app</Text>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('SmallChatAppHome')}>
+          <Text style={styles.PressableTextStyle}>Small ChatApp</Text>
         </Pressable>
         <Pressable>
           <Text style={styles.PressableTextStyle}>My Github Repository</Text>
@@ -107,7 +118,7 @@ function App() {
                 android: {elevation: 0},
                 ios: {shadowOpacity: 0},
               }),
-              backgroundColor: '#879dd9',
+              backgroundColor: PrimaryBlue,
             },
             headerTintColor: 'white',
           }}
@@ -120,7 +131,7 @@ function App() {
             headerTitle: '회원가입',
             headerBackTitle: '로그인',
             headerStyle: {
-              backgroundColor: '#879dd9',
+              backgroundColor: PrimaryBlue,
             },
             headerTintColor: 'white',
           }}
@@ -141,7 +152,7 @@ function App() {
             headerTitle: '일정 추가',
             headerBackTitle: 'back',
             headerStyle: {
-              backgroundColor: '#879dd9',
+              backgroundColor: PrimaryBlue,
             },
             headerTintColor: 'white',
           }}
@@ -152,20 +163,60 @@ function App() {
           options={{
             headerShown: true,
             headerTitle: '일정 추가',
-            headerBackTitle: 'back',
+            headerBackTitle: 'Back',
             headerStyle: {
-              backgroundColor: '#879dd9',
+              backgroundColor: PrimaryBlue,
             },
             headerTintColor: 'white',
           }}
         />
+        <Stack.Screen
+          name="SmallChatAppHome"
+          component={SmallChatAppHome}
+          options={{
+            headerShown: true,
+            headerTitle: '채팅 앱',
+            headerBackTitle: 'Back',
+            headerStyle: {
+              backgroundColor: BrightColor,
+            },
+            headerTintColor: 'black',
+          }}
+        />
+        <Stack.Screen
+          name="SmallChatMain"
+          component={SmallChatMain}
+          options={{
+            headerShown: true,
+            headerTitle: 'Light Chat',
+            headerBackTitle: 'Back',
+            headerStyle: {
+              backgroundColor: BrightColor,
+            },
+            headerTintColor: 'black',
+          }}
+        />
+        <Stack.Screen
+          name="SmallChatTabNavi"
+          component={SmallChatTabNavi}
+          options={{
+            headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
+          }}
+        />
+        {/* <Stack.Screen
+          name="MainTabNavigator"
+          component={MainTabNavigator}
+          options={{
+            headerShown: false,
+          }}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 const styles = StyleSheet.create({
   safeAreaStyle: {
-    backgroundColor: '#fff6db',
+    backgroundColor: BrightColor,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
