@@ -15,8 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from 'axios';
-import {RootStackParamList} from '../../../App';
-import {NavigationProp} from '@react-navigation/native';
+import SmallChatSignUp from './SmallChatSignUp';
 
 const PrimaryColor = '#fff6db';
 function SmallChatAppHome({navigation}: {navigation: any}) {
@@ -39,7 +38,7 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
     const tryAutoLogin = async () => {
       //await EncryptedStorage.setItem('tryChatAutoLogin', 'false');
       const userLogin = await EncryptedStorage.getItem('tryChatAutoLogin');
-
+      //console.log(userLogin);
       if (userLogin == 'true') {
         console.log(userLogin);
         const encryptedEmail = await EncryptedStorage.getItem('chatUserEmail');
@@ -55,12 +54,12 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
     tryAutoLogin();
   }, []);
   const onSubmit = useCallback(
-    async (email: string, password: string) => {
+    async (email: string, pw: string) => {
       try {
         console.log(email);
-        console.log(password);
+        console.log(pw);
         const response = await axios.post(
-          'http://43.201.116.97:3000/todoApp/user/login',
+          'http://43.201.116.97:3000/smallchat/user/login',
           {
             email,
             pw,
@@ -74,6 +73,7 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
           console.log(response.data);
           await EncryptedStorage.setItem('chatUserEmail', response.data.email);
           await EncryptedStorage.setItem('chatUserPassword', response.data.pw);
+          await EncryptedStorage.setItem('chatUserName', response.data.name);
           //const testdata = await EncryptedStorage.getItem('userEmail');
           //console.log(response.data.email);
           //console.log(testdata);
@@ -139,7 +139,10 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
               }}>
               <Text style={styles.bottomBtnStyle}>로그인</Text>
             </Pressable>
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                navigation.navigate(SmallChatSignUp);
+              }}>
               <Text style={styles.bottomBtnStyle}>회원가입</Text>
             </Pressable>
             <Pressable>

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SmallChatMain from '../screen/smallChatApp/SmallChatMain';
 import SmallChatChatting from '../screen/smallChatApp/SmallChatChatting';
 import Icon from 'react-native-vector-icons/Ionicons';
-import SmallChatMore from '../screen/smallChatApp/SmallChatMore';
+import SmallChatMore from '../screen/smallChatApp/SmallChatSearch';
 import SmallChatEtc from '../screen/smallChatApp/SmallChatEtc';
+import ChattingScreen from '../screen/smallChatApp/SmallChatChatting';
 
 const Tab = createBottomTabNavigator();
 const BrightColor = '#fff6db';
@@ -30,22 +31,28 @@ function SmallChatTabNavi() {
         }}
       />
       <Tab.Screen
-        name="Chatting"
-        component={SmallChatChatting}
+        name="ChattingScreen"
+        component={ChattingScreen}
         options={{
           title: '채팅',
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: BrightColor,
+          },
           tabBarIcon: ({color, size}) => (
             <Icon name="chatbubbles-outline" color={'black'} size={20}></Icon>
           ),
         }}
       />
       <Tab.Screen
-        name="MoreInfo"
+        name="SearchFriend"
         component={SmallChatMore}
         options={{
-          title: '채팅',
+          headerShown: false,
+          title: '추가',
+
           tabBarIcon: ({color, size}) => (
-            <Icon name="chatbubbles-outline" color={'black'} size={20}></Icon>
+            <Icon name="search" color={'black'} size={20}></Icon>
           ),
         }}
       />

@@ -33,6 +33,9 @@ import UpdatePlan from './src/screen/todoAppScreen/TodoAppUpdatePlan';
 import SmallChatAppHome from './src/screen/smallChatApp/SmallChatLogin';
 import SmallChatMain from './src/screen/smallChatApp/SmallChatMain';
 import SmallChatTabNavi from './src/Navigator/BottomTabNavigator';
+import ChattingScreen from './src/screen/smallChatApp/SmallChatChatting';
+import ChattingContent from './src/screen/smallChatApp/SmallChatChattingContent';
+import SmallChatSignUp from './src/screen/smallChatApp/SmallChatSignUp';
 
 //import DetailScreen from './src/screen/ToDoApp';
 
@@ -55,6 +58,11 @@ export type RootStackParamList = {
   SmallChatAppHome: undefined;
   SmallChatMain: undefined;
   SmallChatTabNavi: undefined;
+  SmallChatSignUp: undefined;
+  ChattingContent: {myName: string; yourName: string};
+  ChattingScreen: undefined;
+
+  //ChattingScreen: undefined;
 };
 const BrightColor = '#fff6db';
 const PrimaryBlue = '#879dd9';
@@ -76,9 +84,12 @@ function HomeScreen({
           @keonhwi_991231
         </Text>
         <Text style={{fontSize: 14}}>☆ Hi, I'm KeonHwi ☆</Text>
-        <Icon name="logo-github" size={40} style={{margin: 32}}>
-          {' '}
-        </Icon>
+        <Icon
+          name="logo-github"
+          size={40}
+          style={{margin: 32, justifyContent: 'center'}}></Icon>
+      </View>
+      <View>
         <Pressable onPress={() => navigation.navigate('ToDoLoginScreen')}>
           <Text style={styles.PressableTextStyle}>First todo list app</Text>
         </Pressable>
@@ -183,12 +194,25 @@ function App() {
             headerTintColor: 'black',
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SmallChatMain"
           component={SmallChatMain}
           options={{
             headerShown: true,
             headerTitle: 'Light Chat',
+            headerBackTitle: 'Back',
+            headerStyle: {
+              backgroundColor: BrightColor,
+            },
+            headerTintColor: 'black',
+          }}
+        /> */}
+        <Stack.Screen
+          name="ChattingContent"
+          component={ChattingContent}
+          options={{
+            headerShown: true,
+            headerTitle: '채팅',
             headerBackTitle: 'Back',
             headerStyle: {
               backgroundColor: BrightColor,
@@ -203,6 +227,20 @@ function App() {
             headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
           }}
         />
+        <Stack.Screen
+          name="SmallChatSignUp"
+          component={SmallChatSignUp}
+          options={{
+            headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
+          }}
+        />
+        {/* <Stack.Screen
+          name="ChattingScreen"
+          component={ChattingScreen}
+          options={{
+            headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
+          }}
+        /> */}
         {/* <Stack.Screen
           name="MainTabNavigator"
           component={MainTabNavigator}
@@ -231,9 +269,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   middlePartViewStyle: {
-    flex: 2.5,
+    marginTop: 64,
+    //flex: 2.5,
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
   },
   PressableTextStyle: {
     width: (Dimensions.get('window').width * 8) / 9,
