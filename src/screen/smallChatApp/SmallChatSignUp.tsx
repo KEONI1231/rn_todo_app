@@ -36,7 +36,7 @@ function SmallChatSignUp() {
     setPw(text.trim());
   }, []);
   const onChangeStatusMessage = useCallback((text: string) => {
-    setStatusMessage(text);
+    setStatusMessage(text.trim());
   }, []);
 
   const navigation = useNavigation();

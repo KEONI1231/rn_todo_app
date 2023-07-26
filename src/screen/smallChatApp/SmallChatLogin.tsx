@@ -16,6 +16,10 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from 'axios';
 import SmallChatSignUp from './SmallChatSignUp';
+import {Provider, useDispatch, useSelector} from 'react-redux';
+//import {RootState} from '../../redux/store';
+import {login} from '../../redux/user/userSlice';
+import {configureStore} from '@reduxjs/toolkit';
 
 const PrimaryColor = '#fff6db';
 function SmallChatAppHome({navigation}: {navigation: any}) {
@@ -33,7 +37,7 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
 
   const emailRef = useRef<TextInput | null>(null);
   const pwRef = useRef<TextInput | null>(null);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const tryAutoLogin = async () => {
       //await EncryptedStorage.setItem('tryChatAutoLogin', 'false');
@@ -55,6 +59,7 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
   }, []);
   const onSubmit = useCallback(
     async (email: string, pw: string) => {
+      //const user = useSelector ((state : RootState) => state.user)
       try {
         console.log(email);
         console.log(pw);
@@ -67,10 +72,16 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
         );
         if (response.data == 'no user info') {
           Alert.alert('알림', '가입된 유저가 없습니다.');
-          console.log(response.data);
         } else {
           //네비게이션
-          console.log(response.data);
+          dispatch(
+            login({
+              email: response.data.email,
+              pw: response.data.pw,
+              name: response.data.name,
+              statusMessage: response.data.statusMessage,
+            }),
+          );
           await EncryptedStorage.setItem('chatUserEmail', response.data.email);
           await EncryptedStorage.setItem('chatUserPassword', response.data.pw);
           await EncryptedStorage.setItem('chatUserName', response.data.name);
@@ -85,6 +96,7 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
     },
     [email, pw],
   );
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.safeAreaStyle}>

@@ -11,7 +11,7 @@ import type {PropsWithChildren} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {NavigationContainer, NavigationProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
+import {store} from './src/redux/store';
 import {
   Platform,
   Pressable,
@@ -36,6 +36,7 @@ import SmallChatTabNavi from './src/Navigator/BottomTabNavigator';
 import ChattingScreen from './src/screen/smallChatApp/SmallChatChatting';
 import ChattingContent from './src/screen/smallChatApp/SmallChatChattingContent';
 import SmallChatSignUp from './src/screen/smallChatApp/SmallChatSignUp';
+import {Provider} from 'react-redux';
 
 //import DetailScreen from './src/screen/ToDoApp';
 
@@ -108,93 +109,94 @@ function HomeScreen({
 }
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="HOME">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="ToDoLoginScreen"
-          component={ToDoLoginScreen}
-          options={{
-            headerShown: true,
-            headerTitle: 'To Do List App',
-            headerStyle: {
-              //shadowOpacity: 0,
-              ...Platform.select({
-                android: {elevation: 0},
-                ios: {shadowOpacity: 0},
-              }),
-              backgroundColor: PrimaryBlue,
-            },
-            headerTintColor: 'white',
-          }}
-        />
-        <Stack.Screen
-          name="ToDoSignUpScreen"
-          component={ToDoSignUpScreen}
-          options={{
-            headerShown: true,
-            headerTitle: '회원가입',
-            headerBackTitle: '로그인',
-            headerStyle: {
-              backgroundColor: PrimaryBlue,
-            },
-            headerTintColor: 'white',
-          }}
-        />
-        <Stack.Screen
-          name="ToDoAppMain"
-          component={PlannerView}
-          options={{
-            gestureEnabled: false,
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="UpdatePlan"
-          component={UpdatePlan}
-          options={{
-            headerShown: true,
-            headerTitle: '일정 추가',
-            headerBackTitle: 'back',
-            headerStyle: {
-              backgroundColor: PrimaryBlue,
-            },
-            headerTintColor: 'white',
-          }}
-        />
-        <Stack.Screen
-          name="AddPlanScreen"
-          component={AddPlanScreen}
-          options={{
-            headerShown: true,
-            headerTitle: '일정 추가',
-            headerBackTitle: 'Back',
-            headerStyle: {
-              backgroundColor: PrimaryBlue,
-            },
-            headerTintColor: 'white',
-          }}
-        />
-        <Stack.Screen
-          name="SmallChatAppHome"
-          component={SmallChatAppHome}
-          options={{
-            headerShown: true,
-            headerTitle: '채팅 앱',
-            headerBackTitle: 'Back',
-            headerStyle: {
-              backgroundColor: BrightColor,
-            },
-            headerTintColor: 'black',
-          }}
-        />
-        {/* <Stack.Screen
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="HOME">
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="ToDoLoginScreen"
+            component={ToDoLoginScreen}
+            options={{
+              headerShown: true,
+              headerTitle: 'To Do List App',
+              headerStyle: {
+                //shadowOpacity: 0,
+                ...Platform.select({
+                  android: {elevation: 0},
+                  ios: {shadowOpacity: 0},
+                }),
+                backgroundColor: PrimaryBlue,
+              },
+              headerTintColor: 'white',
+            }}
+          />
+          <Stack.Screen
+            name="ToDoSignUpScreen"
+            component={ToDoSignUpScreen}
+            options={{
+              headerShown: true,
+              headerTitle: '회원가입',
+              headerBackTitle: '로그인',
+              headerStyle: {
+                backgroundColor: PrimaryBlue,
+              },
+              headerTintColor: 'white',
+            }}
+          />
+          <Stack.Screen
+            name="ToDoAppMain"
+            component={PlannerView}
+            options={{
+              gestureEnabled: false,
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="UpdatePlan"
+            component={UpdatePlan}
+            options={{
+              headerShown: true,
+              headerTitle: '일정 추가',
+              headerBackTitle: 'back',
+              headerStyle: {
+                backgroundColor: PrimaryBlue,
+              },
+              headerTintColor: 'white',
+            }}
+          />
+          <Stack.Screen
+            name="AddPlanScreen"
+            component={AddPlanScreen}
+            options={{
+              headerShown: true,
+              headerTitle: '일정 추가',
+              headerBackTitle: 'Back',
+              headerStyle: {
+                backgroundColor: PrimaryBlue,
+              },
+              headerTintColor: 'white',
+            }}
+          />
+          <Stack.Screen
+            name="SmallChatAppHome"
+            component={SmallChatAppHome}
+            options={{
+              headerShown: true,
+              headerTitle: '채팅 앱',
+              headerBackTitle: 'Back',
+              headerStyle: {
+                backgroundColor: BrightColor,
+              },
+              headerTintColor: 'black',
+            }}
+          />
+          {/* <Stack.Screen
           name="SmallChatMain"
           component={SmallChatMain}
           options={{
@@ -207,49 +209,50 @@ function App() {
             headerTintColor: 'black',
           }}
         /> */}
-        <Stack.Screen
-          name="ChattingContent"
-          component={ChattingContent}
-          options={{
-            headerShown: true,
-            headerTitle: '채팅',
-            headerBackTitle: 'Back',
-            headerStyle: {
-              backgroundColor: BrightColor,
-            },
-            headerTintColor: 'black',
-          }}
-        />
-        <Stack.Screen
-          name="SmallChatTabNavi"
-          component={SmallChatTabNavi}
-          options={{
-            headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
-          }}
-        />
-        <Stack.Screen
-          name="SmallChatSignUp"
-          component={SmallChatSignUp}
-          options={{
-            headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
-          }}
-        />
-        {/* <Stack.Screen
+          <Stack.Screen
+            name="ChattingContent"
+            component={ChattingContent}
+            options={{
+              headerShown: true,
+              headerTitle: '채팅',
+              headerBackTitle: 'Back',
+              headerStyle: {
+                backgroundColor: BrightColor,
+              },
+              headerTintColor: 'black',
+            }}
+          />
+          <Stack.Screen
+            name="SmallChatTabNavi"
+            component={SmallChatTabNavi}
+            options={{
+              headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
+            }}
+          />
+          <Stack.Screen
+            name="SmallChatSignUp"
+            component={SmallChatSignUp}
+            options={{
+              headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
+            }}
+          />
+          {/* <Stack.Screen
           name="ChattingScreen"
           component={ChattingScreen}
           options={{
             headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
           }}
         /> */}
-        {/* <Stack.Screen
+          {/* <Stack.Screen
           name="MainTabNavigator"
           component={MainTabNavigator}
           options={{
             headerShown: false,
           }}
         /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 const styles = StyleSheet.create({

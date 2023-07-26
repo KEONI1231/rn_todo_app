@@ -19,7 +19,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 interface ProfileModalProps {
   isModalVisible: boolean;
   toggleModal: () => void;
-
+  email: string;
   name: string;
   statusMessage: string;
 }
@@ -29,6 +29,7 @@ const BrightColor = '#fff6db';
 const FriendProfileModal: React.FC<ProfileModalProps> = ({
   isModalVisible,
   toggleModal,
+  email,
   name,
   statusMessage,
 }) => {
@@ -78,13 +79,13 @@ const FriendProfileModal: React.FC<ProfileModalProps> = ({
         </View>
         <Pressable
           onPress={async () => {
-            const myName = await EncryptedStorage.getItem('chatUserName');
-            const youName = name;
+            const userEmail = await EncryptedStorage.getItem('chatUserEmail');
+            const friendEmail = email;
             const response = await axios.post(
               'http://43.201.116.97:3000/small-chat/startchatting',
               {
-                myName,
-                youName,
+                userEmail,
+                friendEmail,
               },
             );
             console.log(response.data);

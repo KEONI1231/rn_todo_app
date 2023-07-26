@@ -12,28 +12,31 @@ function ChattingScreen({
   navigation: NavigationProp<RootStackParamList>;
 }) {
   interface Friend {
-    a: string;
-    b: string;
+    userEmail: string;
+    b_email: string;
     id: number;
+    name: string;
   }
 
   const BrightColor = '#fff6db';
   const [friendsList, setFriendsList] = useState<Friend[]>([]);
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const myName = await EncryptedStorage.getItem('chatUserName');
-    //   const response = await axios.post(
-    //     'http://43.201.116.97:3000/small-chat/getChatList',
-    //     {myName},
-    //   );
-    //   let data = response.data;
-    //   let dataArray: Friend[] = Object.values(data);
-    //   setFriendsList(dataArray);
-    // };
-    // fetchData();
-  }, [friendsList]);
+    const fetchData = async () => {
+      const userEmail = await EncryptedStorage.getItem('chatUserEmail');
+      const response = await axios.post(
+        'http://43.201.116.97:3000/small-chat/getChatList',
+        {userEmail},
+      );
+      let data = response.data;
+      let dataArray: Friend[] = Object.values(data);
+      setFriendsList(dataArray);
+      console.log('시발', dataArray);
+    };
+    fetchData();
+  }, []);
   return (
-    <View style={{flex: 1, backgroundColor: BrightColor}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: BrightColor}}>
+      <Text style={styles.topTextStyle}>채팅목록</Text>
       <FlatList
         contentContainerStyle={{paddingBottom: 200, marginTop: 8}}
         data={friendsList}
@@ -47,7 +50,7 @@ function ChattingScreen({
             <Pressable
               onPress={async () => {
                 const myname = await EncryptedStorage.getItem('chatUserName');
-                const yourName = item.b;
+                const yourName = item.b_email;
                 navigation.navigate('ChattingContent', {
                   myName: myname!,
                   yourName: yourName,
@@ -57,7 +60,7 @@ function ChattingScreen({
               <View style={{marginLeft: 16, justifyContent: 'center'}}>
                 <Text
                   style={{fontSize: 20, fontWeight: 'bold', marginBottom: 4}}>
-                  {item.id}
+                  {item.name}
                 </Text>
                 <Text
                   style={{
@@ -67,24 +70,30 @@ function ChattingScreen({
                   }}
                   numberOfLines={1}
                   ellipsizeMode="tail">
-                  {item.b}
+                  {item.b_email}
                 </Text>
               </View>
             </Pressable>
           </View>
         )}></FlatList>
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   profileCardStyle: {
     flexDirection: 'row',
     marginHorizontal: 16,
-
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 12,
     paddingVertical: 16,
+  },
+  topTextStyle: {
+    //marginTop: 32,
+    textAlign: 'center',
+    fontSize: 20,
+    marginBottom: 16,
+    fontWeight: 'bold',
   },
 });
 export default ChattingScreen;

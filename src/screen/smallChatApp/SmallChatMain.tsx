@@ -1,4 +1,3 @@
-import {NavigationProp} from '@react-navigation/native';
 import {
   Dimensions,
   FlatList,
@@ -9,14 +8,14 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {RootStackParamList} from '../../../App';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
-import Modall from '../../modal/MyProfileDetailModal';
-import Modal from 'react-native-modal/dist/modal';
 import ProfileModal from '../../modal/MyProfileDetailModal';
 import FriendProfileModal from '../../modal/FriendProfileDetailModal';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../redux/store';
+import {fetchFriends} from '../../redux/Friend/getFriendsSlice';
 
 const BrightColor = '#fff6db';
 
@@ -47,33 +46,16 @@ function FriendProfileCard() {
     f_statusMessage: string;
   }
   const [getFriendList, setGetFriendList] = useState(0);
-  const [friendsList, setFriendsList] = useState<Friend[]>([]);
+  const dispatch: AppDispatch = useDispatch();
+  const friendsList = useSelector(
+    (state: RootState) => state.friends.friendsList,
+  );
+  const friendsStatus = useSelector((state: RootState) => state.friends.status);
   useEffect(() => {
-    const fetchData = async () => {
-      const userEmail = await EncryptedStorage.getItem('chatUserEmail');
-      try {
-        const response = await axios.get(
-          'http://43.201.116.97:3000/small-chat/get-friends',
-          {
-            params: {
-              userEmail,
-            },
-          },
-        );
-        if (response.data == '에러발생') {
-          console.log(response.data);
-          setGetFriendList(1);
-        }
-        let data = response.data;
-        let dataArray: Friend[] = Object.values(data);
-        setFriendsList(dataArray);
-        console.log(response.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchData();
-  }, []);
+    if (friendsStatus === 'idle') {
+      dispatch(fetchFriends());
+    }
+  }, [friendsStatus, dispatch]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const toggleModal = () => {
@@ -121,6 +103,7 @@ function FriendProfileCard() {
           <FriendProfileModal
             isModalVisible={modalVisible}
             toggleModal={toggleModal}
+            email={currentItem.f_email}
             name={currentItem.f_name}
             statusMessage={currentItem.f_statusMessage}></FriendProfileModal>
         </View>
@@ -139,6 +122,8 @@ function FriendProfileCard() {
   );
 }
 function ProfileCard() {
+  const user = useSelector((state: RootState) => state.user);
+  console.log('리덕스 데이터', user);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -152,13 +137,13 @@ function ProfileCard() {
         onPress={toggleModal}>
         <View style={{marginLeft: 16, justifyContent: 'center'}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 4}}>
-            김건휘
+            {user.name}
           </Text>
           <Text
             style={{fontSize: 16, color: 'gray'}}
             numberOfLines={1}
             ellipsizeMode="tail">
-            소켓 통신 라이브러리 사용 및 적용을 위한 앱 대충 만들어보기
+            {user.statusMessage}
           </Text>
         </View>
       </Pressable>
