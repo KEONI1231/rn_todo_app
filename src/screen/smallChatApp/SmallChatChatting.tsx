@@ -5,7 +5,10 @@ import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {RootStackParamList} from '../../../App';
-
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
+import {getChatList} from '../../redux/Friend/getChattingSlice';
+import {AppDispatch} from '../../redux/store';
 function ChattingScreen({
   navigation,
 }: {
@@ -19,27 +22,27 @@ function ChattingScreen({
   }
 
   const BrightColor = '#fff6db';
-  const [friendsList, setFriendsList] = useState<Friend[]>([]);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const friendsChatLists = useSelector(
+    (state: RootState) => state.chattingsLists.friendChatList,
+  );
+  const friendChatListsStatus = useSelector(
+    (state: RootState) => state.chattingsLists.status,
+  );
   useEffect(() => {
-    const fetchData = async () => {
-      const userEmail = await EncryptedStorage.getItem('chatUserEmail');
-      const response = await axios.post(
-        'http://43.201.116.97:3000/small-chat/getChatList',
-        {userEmail},
-      );
-      let data = response.data;
-      let dataArray: Friend[] = Object.values(data);
-      setFriendsList(dataArray);
-      console.log('시발', dataArray);
-    };
-    fetchData();
-  }, []);
+    if (friendChatListsStatus === 'idle') {
+      dispatch(getChatList());
+    }
+  }, [friendChatListsStatus, dispatch]);
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: BrightColor}}>
       <Text style={styles.topTextStyle}>채팅목록</Text>
       <FlatList
         contentContainerStyle={{paddingBottom: 200, marginTop: 8}}
-        data={friendsList}
+        data={friendsChatLists}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
           <View
@@ -52,8 +55,8 @@ function ChattingScreen({
                 const myname = await EncryptedStorage.getItem('chatUserName');
                 const yourName = item.b_email;
                 navigation.navigate('ChattingContent', {
-                  myName: myname!,
-                  yourName: yourName,
+                  myEmail: myname!,
+                  yourEmaail: yourName,
                 });
               }}
               style={{flex: 1, justifyContent: 'center'}}>

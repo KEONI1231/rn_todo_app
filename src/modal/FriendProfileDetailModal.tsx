@@ -15,6 +15,9 @@ import {RootStackParamList} from '../../App';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {resetChatListStatus} from '../redux/Friend/getChattingSlice';
+import {RootState} from '../redux/store';
 
 interface ProfileModalProps {
   isModalVisible: boolean;
@@ -34,6 +37,10 @@ const FriendProfileModal: React.FC<ProfileModalProps> = ({
   statusMessage,
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
+  const statusTest = useSelector(
+    (state: RootState) => state.chattingsLists.status,
+  );
 
   return (
     <Modal
@@ -88,10 +95,16 @@ const FriendProfileModal: React.FC<ProfileModalProps> = ({
                 friendEmail,
               },
             );
+            console.log('asdfasdf', statusTest);
+            dispatch(resetChatListStatus());
+            console.log('결과 : ', statusTest);
             console.log(response.data);
 
             toggleModal();
-            navigation.navigate('ChattingScreen');
+            navigation.navigate('ChattingContent', {
+              myEmail: userEmail!,
+              yourEmaail: email,
+            });
           }}>
           <Text style={styles.chatBtnStyle}>채팅하기</Text>
         </Pressable>
@@ -121,7 +134,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 2,
   },
-
   imageStyle: {
     borderRadius: 24, // 둥근 모양을 위한 값, 값은 조절 가능
     width: Dimensions.get('window').width * 0.4, // 이미지 너비, 값은 조절 가능

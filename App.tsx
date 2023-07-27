@@ -60,9 +60,8 @@ export type RootStackParamList = {
   SmallChatMain: undefined;
   SmallChatTabNavi: undefined;
   SmallChatSignUp: undefined;
-  ChattingContent: {myName: string; yourName: string};
+  ChattingContent: {myEmail: string; yourEmaail: string};
   ChattingScreen: undefined;
-
   //ChattingScreen: undefined;
 };
 const BrightColor = '#fff6db';

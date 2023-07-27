@@ -6,12 +6,12 @@ interface Friend {
   f_name: string;
   f_email: string;
   f_statusMessage: string;
-}
+} //
 
 interface FriendsState {
   friendsList: Friend[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-}
+} //친구를 받아오는 4가지 상태 정의
 
 const initialState: FriendsState = {
   friendsList: [],
@@ -24,14 +24,14 @@ export const fetchFriends = createAsyncThunk(
   async () => {
     const userEmail = await EncryptedStorage.getItem('chatUserEmail');
     const response = await axios.get(
-      'http://43.201.116.97:3000/small-chat/get-friends',
+      'http://43.201.116.97:3000/small-chat/get-friends', //가능하다면 토큰
       {
         params: {
           userEmail,
         },
       },
     );
-    console.log(response.data);
+    //console.log(response.data);
     return response.data; // payload로 반환됩니다.
   },
 );
@@ -42,7 +42,7 @@ const friendsSlice = createSlice({
   initialState,
   reducers: {
     resetStatus: state => {
-      state.status = 'idle';
+      state.status = 'idle'; //다시 통신하기 상태
     },
   },
   extraReducers: builder => {

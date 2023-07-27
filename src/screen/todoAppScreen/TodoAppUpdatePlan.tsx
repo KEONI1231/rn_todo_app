@@ -71,7 +71,7 @@ function UpdatePlan({navigation, route}: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
+      style={{flex: 1, backgroundColor: PrimaryColor}}>
       <ScrollView>
         <View style={styles.safeAreaStyle}>
           <Text style={styles.dateTextStyle}>날짜 : {selectDate}</Text>

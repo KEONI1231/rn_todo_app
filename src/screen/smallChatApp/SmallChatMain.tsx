@@ -40,11 +40,6 @@ function SmallChatMain() {
 }
 
 function FriendProfileCard() {
-  interface Friend {
-    f_name: string;
-    f_email: string;
-    f_statusMessage: string;
-  }
   const [getFriendList, setGetFriendList] = useState(0);
   const dispatch: AppDispatch = useDispatch();
   const friendsList = useSelector(
@@ -56,7 +51,7 @@ function FriendProfileCard() {
       dispatch(fetchFriends());
     }
   }, [friendsStatus, dispatch]);
-
+  console.log(friendsStatus);
   const [modalVisible, setModalVisible] = useState(false);
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -67,7 +62,7 @@ function FriendProfileCard() {
     f_name: '',
     f_statusMessage: '',
   });
-  return getFriendList != 1 ? (
+  return friendsStatus === 'succeeded' ? (
     <FlatList
       contentContainerStyle={{paddingBottom: 200}}
       data={friendsList}
@@ -123,6 +118,7 @@ function FriendProfileCard() {
 }
 function ProfileCard() {
   const user = useSelector((state: RootState) => state.user);
+
   console.log('리덕스 데이터', user);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
