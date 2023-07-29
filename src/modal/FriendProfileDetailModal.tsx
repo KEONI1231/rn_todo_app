@@ -38,10 +38,10 @@ const FriendProfileModal: React.FC<ProfileModalProps> = ({
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
+  console.log('누구의 이메일인가 : ', email);
   const statusTest = useSelector(
     (state: RootState) => state.chattingsLists.status,
   );
-
   return (
     <Modal
       isVisible={isModalVisible}
@@ -103,7 +103,7 @@ const FriendProfileModal: React.FC<ProfileModalProps> = ({
             toggleModal();
             navigation.navigate('ChattingContent', {
               myEmail: userEmail!,
-              yourEmaail: email,
+              yourEmail: email,
             });
           }}>
           <Text style={styles.chatBtnStyle}>채팅하기</Text>

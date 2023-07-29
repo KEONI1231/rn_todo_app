@@ -29,7 +29,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
     setMyName(name!.toString());
   }, []);
   getName();
-
+  console.log('내 프로필 모달 렌더링');
   return (
     <Modal
       isVisible={isModalVisible}
@@ -40,7 +40,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 16}}>
           프로필
         </Text>
-
         <View>
           <Image
             style={styles.imageStyle}

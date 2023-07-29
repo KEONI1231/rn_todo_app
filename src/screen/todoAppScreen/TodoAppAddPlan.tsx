@@ -21,11 +21,6 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 const PrimaryColor = '#879dd9';
 
-export type AddPlanScreenProps = StackScreenProps<
-  RootStackParamList,
-  'AddPlanScreen'
->;
-
 function AddPlanScreen({navigation, route}: any) {
   const selectDate = route.params.selectDate;
   const [startTime, setStartTime] = useState(0);

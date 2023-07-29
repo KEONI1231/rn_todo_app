@@ -92,7 +92,9 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
           navigation.navigate('SmallChatTabNavi');
           //console.log(response.data);
         }
-      } catch (e) {}
+      } catch (e) {
+        Alert.alert('알림', 'Connection to the Server has failed!!');
+      }
     },
     [email, pw],
   );

@@ -14,17 +14,8 @@ function ChattingScreen({
 }: {
   navigation: NavigationProp<RootStackParamList>;
 }) {
-  interface Friend {
-    userEmail: string;
-    b_email: string;
-    id: number;
-    name: string;
-  }
-
   const BrightColor = '#fff6db';
-
   const dispatch: AppDispatch = useDispatch();
-
   const friendsChatLists = useSelector(
     (state: RootState) => state.chattingsLists.friendChatList,
   );
@@ -36,7 +27,7 @@ function ChattingScreen({
       dispatch(getChatList());
     }
   }, [friendChatListsStatus, dispatch]);
-
+  const user = useSelector((state: RootState) => state.user);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: BrightColor}}>
       <Text style={styles.topTextStyle}>채팅목록</Text>
@@ -54,9 +45,10 @@ function ChattingScreen({
               onPress={async () => {
                 const myname = await EncryptedStorage.getItem('chatUserName');
                 const yourName = item.b_email;
+                //console.log('테스트 :', user);
                 navigation.navigate('ChattingContent', {
-                  myEmail: myname!,
-                  yourEmaail: yourName,
+                  myEmail: user.email,
+                  yourEmail: yourName,
                 });
               }}
               style={{flex: 1, justifyContent: 'center'}}>

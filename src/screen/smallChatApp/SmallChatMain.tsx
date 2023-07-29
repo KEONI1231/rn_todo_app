@@ -29,10 +29,16 @@ function SmallChatMain() {
             style={styles.imageStyle}
             source={require('../../images/myprofileimg.jpg')}
           />
+          {
+            // 내 프로필 카드
+          }
           <ProfileCard></ProfileCard>
         </View>
         <Text style={styles.titleTextStyle}>친구 목록</Text>
 
+        {
+          //친구 프로필 카드
+        }
         <FriendProfileCard></FriendProfileCard>
       </View>
     </SafeAreaView>
@@ -40,7 +46,6 @@ function SmallChatMain() {
 }
 
 function FriendProfileCard() {
-  const [getFriendList, setGetFriendList] = useState(0);
   const dispatch: AppDispatch = useDispatch();
   const friendsList = useSelector(
     (state: RootState) => state.friends.friendsList,
@@ -51,7 +56,8 @@ function FriendProfileCard() {
       dispatch(fetchFriends());
     }
   }, [friendsStatus, dispatch]);
-  console.log(friendsStatus);
+  //console.log(friendsStatus);
+
   const [modalVisible, setModalVisible] = useState(false);
   const toggleModal = () => {
     setModalVisible(!modalVisible);

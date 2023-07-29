@@ -60,7 +60,7 @@ export type RootStackParamList = {
   SmallChatMain: undefined;
   SmallChatTabNavi: undefined;
   SmallChatSignUp: undefined;
-  ChattingContent: {myEmail: string; yourEmaail: string};
+  ChattingContent: {myEmail: string; yourEmail: string};
   ChattingScreen: undefined;
   //ChattingScreen: undefined;
 };
