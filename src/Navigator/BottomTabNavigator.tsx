@@ -60,9 +60,11 @@ function SmallChatTabNavi() {
         name="Etc"
         component={SmallChatEtc}
         options={{
-          title: '채팅',
+          title: '설정',
+          headerShown: false,
+
           tabBarIcon: ({color, size}) => (
-            <Icon name="chatbubbles-outline" color={'black'} size={20}></Icon>
+            <Icon name="settings-outline" color={'black'} size={20}></Icon>
           ),
         }}
       />

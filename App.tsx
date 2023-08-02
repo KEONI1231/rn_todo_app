@@ -225,6 +225,7 @@ function App() {
             name="SmallChatTabNavi"
             component={SmallChatTabNavi}
             options={{
+              gestureEnabled: false,
               headerShown: false, // 필요하다면 이를 통해 헤더를 숨길 수 있습니다.
             }}
           />

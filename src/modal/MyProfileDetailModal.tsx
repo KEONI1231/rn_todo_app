@@ -17,7 +17,7 @@ interface ProfileModalProps {
   toggleModal: () => void;
 }
 
-const BrightColor = '#fff6db';
+const PrimaryColor = '#fff6db';
 
 const ProfileModal: React.FC<ProfileModalProps> = ({
   isModalVisible,
@@ -28,7 +28,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
     const name = await EncryptedStorage.getItem('chatUserName');
     setMyName(name!.toString());
   }, []);
-  getName();
+  getName(); 
   console.log('내 프로필 모달 렌더링');
   return (
     <Modal
@@ -61,7 +61,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
           <View
             style={{
               flex: 1,
-              backgroundColor: BrightColor,
+              backgroundColor: PrimaryColor,
             }}>
             <ScrollView
               contentContainerStyle={{
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   defaultViewStyle: {
     width: '80%',
     height: '70%',
-    backgroundColor: BrightColor,
+    backgroundColor: PrimaryColor,
     padding: 20,
     alignItems: 'center',
     alignSelf: 'center',
