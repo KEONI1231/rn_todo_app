@@ -215,16 +215,32 @@ function MessageCard({userEmail, friendEmail, flatListRef}: MessageCardProps) {
                     {item.a_name}
                   </Text>
                 )}
-                <Text style={styles.messageTextStyle}>{item.contents}</Text>
+                {userEmail != item.sender ? (
+                  <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                    <Text style={styles.messageTextStyle}>{item.contents}</Text>
 
-                <Text
-                  style={
-                    item.sender == userEmail
-                      ? styles.rightTimeTextStyle
-                      : styles.leftTimeTextStyle
-                  }>
-                  {formattedTime}
-                </Text>
+                    <Text
+                      style={
+                        item.sender == userEmail
+                          ? styles.rightTimeTextStyle
+                          : styles.leftTimeTextStyle
+                      }>
+                      {formattedTime}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                    <Text
+                      style={
+                        item.sender == userEmail
+                          ? styles.rightTimeTextStyle
+                          : styles.leftTimeTextStyle
+                      }>
+                      {formattedTime}
+                    </Text>
+                    <Text style={styles.messageTextStyle}>{item.contents}</Text>
+                  </View>
+                )}
               </View>
             </View>
           </View>
@@ -308,11 +324,13 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     paddingHorizontal: 8,
     marginTop: 8,
+    color: 'gray',
   },
   rightTimeTextStyle: {
     textAlign: 'right',
     paddingHorizontal: 8,
     marginTop: 8,
+    color: 'gray',
   },
   formattedTimeStyle: {
     alignItems: 'center',
