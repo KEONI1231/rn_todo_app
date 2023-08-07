@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: 'black',
+    flexShrink: 1,
   },
   sendBtnTextStyle: {
     justifyContent: 'center',

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "568618526938",
+    "project_id": "react-native-chatting-firebase",
+    "storage_bucket": "react-native-chatting-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568618526938:android:d73df42db8277482dfdde3",
+        "android_client_info": {
+          "package_name": "com.rntodoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "568618526938-9u842uu6jedco99sim58rq8c50q3b2ku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rntodoapp",
+            "certificate_hash": "13e297fec4e6076ef750fd81a621f99adc70ded8"
+          }
+        },
+        {
+          "client_id": "568618526938-plbfm8l08uupqu1iq6eo3t2fus1qkphb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAZHWD8L0Wucx6uk1_3KboMhIgB-qDx2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "568618526938-plbfm8l08uupqu1iq6eo3t2fus1qkphb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -117,7 +117,7 @@ function UpdatePlan({navigation, route}: any) {
           </View>
           <View>
             <View style={{alignItems: 'center'}}>
-              <Text style={styles.defaultTextStyle}>일정</Text>
+              <Text style={styles.defaultTextStyle}>일정ios/Fonts</Text>
               <TextInput
                 style={styles.contentTextInputStyle}
                 placeholder="일정을 입력하세요"

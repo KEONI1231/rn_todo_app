@@ -5,10 +5,13 @@
  * @format
  */
 //intro 스크린
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 //import myprofileimg from './assets/images/myprofileimg.JPG';
-import Icon from 'react-native-vector-icons/Ionicons';
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NavigationContainer, NavigationProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {store} from './src/redux/store';
@@ -16,11 +19,8 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
   Dimensions,
   Image,
@@ -31,18 +31,17 @@ import PlannerView from './src/screen/todoAppScreen/ToDoAppMain';
 import AddPlanScreen from './src/screen/todoAppScreen/TodoAppAddPlan';
 import UpdatePlan from './src/screen/todoAppScreen/TodoAppUpdatePlan';
 import SmallChatAppHome from './src/screen/smallChatApp/SmallChatLogin';
-import SmallChatMain from './src/screen/smallChatApp/SmallChatMain';
 import SmallChatTabNavi from './src/Navigator/BottomTabNavigator';
-import ChattingScreen from './src/screen/smallChatApp/SmallChatChatting';
 import ChattingContent from './src/screen/smallChatApp/SmallChatChattingContent';
 import SmallChatSignUp from './src/screen/smallChatApp/SmallChatSignUp';
 import {Provider} from 'react-redux';
 
 //import DetailScreen from './src/screen/ToDoApp';
+Ionicons.loadFont();
 
 //아래는 스택을 등록하는 부분. 그냥 외워야 할듯.
 const Stack = createNativeStackNavigator();
-
+//console.log(a);
 export type RootStackParamList = {
   HomeScreen: undefined;
   ToDoLoginScreen: undefined;
@@ -67,12 +66,73 @@ export type RootStackParamList = {
 const BrightColor = '#fff6db';
 const PrimaryBlue = '#879dd9';
 //여기까지
+
+import firestore from '@react-native-firebase/firestore';
+
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
+}
+
 function HomeScreen({
   navigation,
 }: {
   navigation: NavigationProp<RootStackParamList, 'HomeScreen'>;
 }) {
-  const gitIcon = <Icon name="logo-github"></Icon>;
+  const [addName, setAddName] = useState('test data');
+  const [addAge, setAddAge] = useState('test data age');
+  const addCollection = firestore().collection('users');
+
+  const addText = async () => {
+    console.log('asdf');
+    try {
+      await addCollection.add({
+        name: addName,
+        age: addAge,
+      });
+      setAddName('');
+      setAddAge('');
+      console.log('Create Complete!');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //addText();
+
+  const PushNotification = async () => {
+    let fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log('토큰 : ', fcmToken);
+    }
+  };
+
+  useEffect(() => {
+    requestUserPermission();
+    PushNotification();
+    console.log('asdf');
+    // Register background handlerz`
+    messaging().setBackgroundMessageHandler(
+      async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+        console.log('Message handled in the background!', remoteMessage);
+      },
+    );
+
+    // Register foreground handler
+    const unsubscribe = messaging().onMessage(
+      async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+        console.log('Message handled in the foreground!', remoteMessage);
+      },
+    );
+
+    return unsubscribe;
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeAreaStyle}>
       <View style={styles.middlePartViewStyle}>
@@ -84,10 +144,12 @@ function HomeScreen({
           @keonhwi_991231
         </Text>
         <Text style={{fontSize: 14}}>☆ Hi, I'm KeonHwi ☆</Text>
-        <Icon
-          name="logo-github"
-          size={40}
-          style={{margin: 32, justifyContent: 'center'}}></Icon>
+        <Pressable onPress={addText}>
+          <Ionicons
+            name="logo-github"
+            size={40}
+            style={{margin: 32, justifyContent: 'center'}}></Ionicons>
+        </Pressable>
       </View>
       <View>
         <Pressable onPress={() => navigation.navigate('ToDoLoginScreen')}>
@@ -106,6 +168,7 @@ function HomeScreen({
     </SafeAreaView>
   );
 }
+
 function App() {
   return (
     <Provider store={store}>
