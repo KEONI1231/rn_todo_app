@@ -24,7 +24,7 @@ export const getChatList = createAsyncThunk(
   async () => {
     const userEmail = await EncryptedStorage.getItem('chatUserEmail');
     const response = await axios.post(
-      'http://43.201.116.97:3000/small-chat/getChatList',
+      'http://43.201.116.97:3000/chat/small-chat/getChatList',
       {userEmail},
     );
     return response.data;

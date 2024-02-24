@@ -41,7 +41,7 @@ function ToDoSignUpScreen() {
     setName(text.trim());
   }, []);
   const onSubmit = useCallback(async () => {
-    /*
+    /**
       조건문 정리
       1. email, pw, name 텍스트가 비어있는가?
         - 비어있다면 버튼 비활성 시각화
@@ -53,16 +53,15 @@ function ToDoSignUpScreen() {
       1. 서버 접근 후 처리(axios)
         - 서버에서 받아오는 에러 처리
       2. 알러트 띄우기 (ex. 회원가입 중입니다. 등등)
-    
       해볼 것
       1. 키보드가 올라가 있는 상태에서 포커싱 벗어나면 키보드 닷기
       2. email, pw 입력할 때 엔터 누르면 다음 텍스트 인풋으로 포커싱 이동.
-    */
+    **/
     setLoading(true);
 
     try {
       const response = await axios.post(
-        'http://43.201.116.97:3000/todoApp/user/create',
+        'http://43.201.116.97:3000/user/todoApp/user/create',
         {
           email,
           pw,

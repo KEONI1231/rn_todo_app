@@ -37,7 +37,7 @@ function SmallChatMore() {
     const userEmail = await EncryptedStorage.getItem('chatUserEmail');
     try {
       const response = await axios.post(
-        'http://43.201.116.97:3000/small-chat/add-friend',
+        'http://43.201.116.97:3000/chat/small-chat/add-friend',
         {
           userEmail,
           searchEmail,
@@ -60,7 +60,7 @@ function SmallChatMore() {
       return Alert.alert('알림', '본인 계정을 친구로 추가할 수 없습니다.');
     }
     const response = await axios.get(
-      'http://43.201.116.97:3000/smallchat/search-friends',
+      'http://43.201.116.97:3000/chat/smallchat/search-friends',
       {
         params: {
           searchEmail: searchEmail,

@@ -38,7 +38,7 @@ function deletePlanAlert(id: any) {
           const userEmail = await EncryptedStorage.getItem('userEmail');
           // console.log(userEmail);
           const response = await axios.delete(
-            'http://43.201.116.97:3000/todoApp/delete-plan',
+            'http://43.201.116.97:3000/plan/todoApp/delete-plan',
             {
               params: {
                 userEmail: userEmail,
@@ -218,7 +218,7 @@ function CalendarView(props: any) {
     const fetchData = async () => {
       const userEmail = await EncryptedStorage.getItem('userEmail');
       const response = await axios.get(
-        'http://43.201.116.97:3000/todoApp/getPlanDate',
+        'http://43.201.116.97:3000/plan/todoApp/getPlanDate',
         {
           params: {
             userEmail: userEmail,
@@ -273,7 +273,7 @@ function CalendarView(props: any) {
         setPlanedResDate(day.dateString);
 
         const planDataResponse = await axios.get(
-          'http://43.201.116.97:3000/todoApp/getPlan',
+          'http://43.201.116.97:3000/plan/todoApp/getPlan',
           {
             params: {
               selectDate: day.dateString,

@@ -4,6 +4,9 @@
  *
  * @format
  */
+
+//mysql -h highconnect-db.c8vw3dkxojx3.ap-northeast-2.rds.amazonaws.com -P 3306 -u admin -p
+
 //intro 스크린
 import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
@@ -68,6 +71,7 @@ const PrimaryBlue = '#879dd9';
 //여기까지
 
 import firestore from '@react-native-firebase/firestore';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -90,7 +94,6 @@ function HomeScreen({
   const addCollection = firestore().collection('users');
 
   const addText = async () => {
-    console.log('asdf');
     try {
       await addCollection.add({
         name: addName,
@@ -108,14 +111,16 @@ function HomeScreen({
   const PushNotification = async () => {
     let fcmToken = await messaging().getToken();
     if (fcmToken) {
-      console.log('토큰 : ', fcmToken);
+      EncryptedStorage.setItem('fcmToken', fcmToken);
+
+      console.log('토큰 출력 : ', fcmToken);
     }
   };
 
   useEffect(() => {
     requestUserPermission();
     PushNotification();
-    console.log('asdf');
+
     // Register background handlerz`
     messaging().setBackgroundMessageHandler(
       async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {

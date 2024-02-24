@@ -7,6 +7,7 @@ interface UserState {
   pw: string;
   name: string;
   statusMessage: string;
+  deviceFcmToken: string;
 }
 
 const initialState: UserState = {
@@ -14,6 +15,7 @@ const initialState: UserState = {
   pw: '',
   name: '',
   statusMessage: '',
+  deviceFcmToken: '',
 };
 
 const userSlice = createSlice({

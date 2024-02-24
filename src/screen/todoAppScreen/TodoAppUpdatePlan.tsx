@@ -50,7 +50,7 @@ function UpdatePlan({navigation, route}: any) {
     const userEmail = await EncryptedStorage.getItem('userEmail');
 
     const response = await axios.put(
-      'http://43.201.116.97:3000/todoApp/update-plan',
+      'http://43.201.116.97:3000/plan/todoApp/update-plan',
       {
         userEmail: userEmail,
         id: id,

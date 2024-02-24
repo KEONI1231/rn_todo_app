@@ -28,7 +28,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
     const name = await EncryptedStorage.getItem('chatUserName');
     setMyName(name!.toString());
   }, []);
-  getName(); 
+  getName();
   console.log('내 프로필 모달 렌더링');
   return (
     <Modal

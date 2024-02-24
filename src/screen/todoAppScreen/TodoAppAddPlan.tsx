@@ -27,7 +27,6 @@ function AddPlanScreen({navigation, route}: any) {
   const [endTime, setEndTime] = useState(0);
   const [content, setContent] = useState('');
 
-  const startTimeRef = useRef<TextInput | null>(null);
   const endTimeRef = useRef<TextInput | null>(null);
   const contentRef = useRef<TextInput | null>(null);
   const check = false;
@@ -53,7 +52,7 @@ function AddPlanScreen({navigation, route}: any) {
       return Alert.alert('알림', '끝 나는 시간을 0이상 24이하로 설정하세요');
     }
     const response = await axios.post(
-      'http://43.201.116.97:3000/todoApp/create/plan',
+      'http://43.201.116.97:3000/plan/todoApp/create/plan',
       {
         startTime,
         endTime,

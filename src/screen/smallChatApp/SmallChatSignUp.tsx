@@ -13,6 +13,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const BrightColor = '#fff6db';
@@ -36,23 +37,23 @@ function SmallChatSignUp() {
     setPw(text.trim());
   }, []);
   const onChangeStatusMessage = useCallback((text: string) => {
-    setStatusMessage(text.trim());
+    setStatusMessage(text);
   }, []);
 
   const navigation = useNavigation();
   const onSubmit = useCallback(async () => {
-    console.log(email);
-    console.log(name);
-    console.log(pw);
-    console.log(statusMessage);
+    const device_fcm_token = await EncryptedStorage.getItem('fcmToken');
+    
+    console.log(device_fcm_token);
     try {
       const response = await axios.post(
-        'http://43.201.116.97:3000/smallchat/user/create',
+        'http://43.201.116.97:3000/user/smallchat/user/create',
         {
           email,
           pw,
           name,
           statusMessage,
+          device_fcm_token,
         },
       );
       if (response.data == 'err 발생') {

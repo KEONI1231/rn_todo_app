@@ -64,7 +64,7 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
         console.log(email);
         console.log(pw);
         const response = await axios.post(
-          'http://43.201.116.97:3000/smallchat/user/login',
+          'http://43.201.116.97:3000/user/smallchat/user/login',
           {
             email,
             pw,
@@ -80,11 +80,14 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
               pw: response.data.pw,
               name: response.data.name,
               statusMessage: response.data.statusMessage,
+              deviceFcmToken: response.data.deviceFcmToken,
             }),
           );
+          console.log(response.data);
           await EncryptedStorage.setItem('chatUserEmail', response.data.email);
           await EncryptedStorage.setItem('chatUserPassword', response.data.pw);
           await EncryptedStorage.setItem('chatUserName', response.data.name);
+
           //const testdata = await EncryptedStorage.getItem('userEmail');
           //console.log(response.data.email);
           //console.log(testdata);
@@ -93,6 +96,7 @@ function SmallChatAppHome({navigation}: {navigation: any}) {
           //console.log(response.data);
         }
       } catch (e) {
+        console.log(e);
         Alert.alert('알림', 'Connection to the Server has failed!!');
       }
     },

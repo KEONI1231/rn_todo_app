@@ -1,3 +1,4 @@
+
 import {
   Alert,
   Dimensions,
@@ -102,7 +103,7 @@ function MessageCard({userEmail, friendEmail, flatListRef}: MessageCardProps) {
   useEffect(() => {
     try {
       const getChatDatas = async () => {
-        const response = await axios(ENDPOINT + '/get-chat-contents', {
+        const response = await axios(ENDPOINT + '/chat/get-chat-contents', {
           params: {
             userEmail,
             friendEmail,

@@ -10,7 +10,7 @@ interface Friend {
 
 interface FriendsState {
   friendsList: Friend[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: 'idle' | 'loading' | 'succeeded' | 'failed' | 'no data';
 } //친구를 받아오는 4가지 상태 정의
 
 const initialState: FriendsState = {
@@ -24,13 +24,14 @@ export const fetchFriends = createAsyncThunk(
   async () => {
     const userEmail = await EncryptedStorage.getItem('chatUserEmail');
     const response = await axios.get(
-      'http://43.201.116.97:3000/small-chat/get-friends', //가능하다면 토큰
+      'http://43.201.116.97:3000/chat/small-chat/get-friends', //가능하다면 토큰
       {
         params: {
           userEmail,
         },
       },
     );
+
     //console.log(response.data);
     return response.data; // payload로 반환됩니다.
   },
@@ -54,8 +55,12 @@ const friendsSlice = createSlice({
         state.status = 'succeeded';
         // 서버로부터 반환된 데이터를 state에 추가
         let data = action.payload;
-        let dataArray: Friend[] = Object.values(data);
-        state.friendsList = dataArray;
+        if (data == '친구 목록 없음') {
+          state.status = 'no data';
+        } else {
+          let dataArray: Friend[] = Object.values(data);
+          state.friendsList = dataArray;
+        }
       })
       .addCase(fetchFriends.rejected, state => {
         state.status = 'failed';

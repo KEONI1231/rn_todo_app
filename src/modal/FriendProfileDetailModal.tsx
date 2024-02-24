@@ -64,7 +64,6 @@ const FriendProfileModal: React.FC<ProfileModalProps> = ({
             }}>
             {name}
           </Text>
-
           <View
             style={{
               flex: 1,
@@ -89,17 +88,13 @@ const FriendProfileModal: React.FC<ProfileModalProps> = ({
             const userEmail = await EncryptedStorage.getItem('chatUserEmail');
             const friendEmail = email;
             const response = await axios.post(
-              'http://43.201.116.97:3000/small-chat/startchatting',
+              'http://43.201.116.97:3000/chat/small-chat/startchatting',
               {
                 userEmail,
                 friendEmail,
               },
             );
-            console.log('asdfasdf', statusTest);
             dispatch(resetChatListStatus());
-            console.log('결과 : ', statusTest);
-            console.log(response.data);
-
             toggleModal();
             navigation.navigate('ChattingContent', {
               myEmail: userEmail!,

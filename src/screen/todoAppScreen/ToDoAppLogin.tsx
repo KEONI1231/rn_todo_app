@@ -67,35 +67,33 @@ function ToDoLoginScreen({
   }, []);
   const onSubmit = useCallback(
     async (email: string, pw: string) => {
-      //console.log(email);
-      //console.log(pw);
+      console.log("로그인 시도 : " , email);
+      console.log("로그인 시도 : " ,pw);
       try {
-        //console.log(email);
-        //console.log(pw);
+        console.log(email);
+        console.log(pw);
         const response = await axios.post(
-          'http://43.201.116.97:3000/todoApp/user/login',
+          'https://keoni-spring-study.duckdns.org:8080/api/v1/todo-app/log-in',
           {
-            email,
-            pw,
+            email: email,
+            password : pw,
           },
         );
-        if (response.data == 'no user info') {
-          Alert.alert('알림', '가입된 유저가 없습니다.');
-          console.log(response.data);
-        } else {
+
           //네비게이션
-          console.log(response.data);
-          await EncryptedStorage.setItem('userEmail', response.data.email);
-          await EncryptedStorage.setItem('userPassword', response.data.pw);
-          //const testdata = await EncryptedStorage.getItem('userEmail');
-          //console.log(response.data.email);
-          //console.log(testdata);
+          //console.log(response.data);
+          //await EncryptedStorage.setItem('userEmail', response.data.email);
+          //await EncryptedStorage.setItem('userPassword', response.data.pw);
           Alert.alert('알림', '로그인 완료되었습니다.');
           navigation.navigate('ToDoAppMain');
           //console.log(response.data);
-        }
+
+        navigation.navigate('ToDoAppMain');
       } catch (e) {
+        Alert.alert("알림", e.toString());
+        console.log(e);
       } finally {
+
       }
     },
     [email, pw],
