@@ -79,18 +79,20 @@ function ToDoLoginScreen({
             password : pw,
           },
         );
-
-          //네비게이션
-          //console.log(response.data);
-          //await EncryptedStorage.setItem('userEmail', response.data.email);
-          //await EncryptedStorage.setItem('userPassword', response.data.pw);
+        //console.log(response.data.error);
+        if(response.data.error == null) {
+          console.log(response.data.data.accessToken);
+          await EncryptedStorage.setItem('accessToken', response.data.data.accessToken);
+          await EncryptedStorage.setItem('refreshToken', response.data.data.refreshToken);
           Alert.alert('알림', '로그인 완료되었습니다.');
-          navigation.navigate('ToDoAppMain');
           //console.log(response.data);
-
-        navigation.navigate('ToDoAppMain');
+          navigation.navigate('ToDoAppMain');
+        }
+        else {
+          Alert.alert("알림", response.data.error.message)
+        }
       } catch (e) {
-        Alert.alert("알림", e.toString());
+        //Alert.alert("알림", e.toString());
         console.log(e);
       } finally {
 

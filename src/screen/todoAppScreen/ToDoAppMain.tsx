@@ -35,17 +35,18 @@ function deletePlanAlert(id: any) {
       {
         text: '네',
         onPress: async () => {
-          const userEmail = await EncryptedStorage.getItem('userEmail');
+          const accessToken = await EncryptedStorage.getItem('accessToken');
+          console.log(accessToken)
           // console.log(userEmail);
           const response = await axios.delete(
-            'http://43.201.116.97:3000/plan/todoApp/delete-plan',
+            'https://keoni-spring-study.duckdns.org:8080/api/v1/todo-app/plans/detail',
             {
-              params: {
-                userEmail: userEmail,
-                id: id,
-              },
+              headers : {
+                Authorization : 'Bearer '+ accessToken
+              }
             },
           );
+          console.log(response.data);
           if (response.data == '삭제완료') {
             Alert.alert('알림', '삭제 완료');
           } else {
@@ -75,39 +76,6 @@ function PlanCard(props: any) {
           <View style={styles.planCardStyle}>
             <View style={styles.cardPositionStyle}>
               <View style={styles.checkboxAndTextContainer}>
-                {/* <BouncyCheckbox
-                  style={
-                    {
-                      //alignSelf: 'flex-end'
-                    }
-                  }
-                  size={20}
-                  fillColor="indigo"
-                  unfillColor="#FFFFFF"
-                  hitSlop={{top: 5, bottom: 5, left: 0, right: 0}}
-                  iconStyle={{borderColor: 'red'}}
-                  //isChecked={item.checkPlan}
-                  onPress={async (isChecked: boolean) => {
-                    console.log(isChecked);
-                    const userEmail = await EncryptedStorage.getItem(
-                      'userEmail',
-                    );
-                    const response = await axios.put(
-                      'http://43.201.116.97:3000/todoApp/update-check',
-                      {
-                        userEmail: userEmail,
-                        id: item.id,
-                        selectDate: selectDate,
-                        checkPlan: isChecked,
-                      },
-                    );
-                    if (response.data == '성공') {
-                      //.log('성공');
-                    } else {
-                      // console.log('에러 발생');
-                    }
-                  }}></BouncyCheckbox> */}
-
                 <View style={{flex: 1}}>
                   <View
                     style={{
@@ -216,16 +184,18 @@ function CalendarView(props: any) {
   const [planMarkDate, setPlanMarkDate] = useState({});
   useEffect(() => {
     const fetchData = async () => {
-      const userEmail = await EncryptedStorage.getItem('userEmail');
+      const accessToken = await EncryptedStorage.getItem("accessToken");
+      console.log(accessToken);
       const response = await axios.get(
-        'http://43.201.116.97:3000/plan/todoApp/getPlanDate',
+        'https://keoni-spring-study.duckdns.org:8080/api/v1/todo-app/plans',
         {
-          params: {
-            userEmail: userEmail,
-          },
+          headers: {
+            Authorization : 'Bearer '+ accessToken
+          }
         },
       );
-      let data = Object.values(response.data) as {selectDate: string}[]; // response.data는 서버에서 받은 데이터입니다.
+      console.log(response.data);
+      let data = Object.values(response.data.data) as {selectDate: string}[];
 
       // markedDates 객체를 생성합니다.
       let newMarkedDates: {[date: string]: {marked: boolean}} = {};
@@ -271,14 +241,15 @@ function CalendarView(props: any) {
         }));
         // 새로 선택된 날짜를 저장합니다.
         setPlanedResDate(day.dateString);
-
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         const planDataResponse = await axios.get(
-          'http://43.201.116.97:3000/plan/todoApp/getPlan',
+          'https://keoni-spring-study.duckdns.org:8080/api/v1/todo-app/plans/detail/',
           {
-            params: {
-              selectDate: day.dateString,
-              userEmail,
-            },
+            headers:{
+              Authorization : 'Bearer ' + accessToken
+            },params:{
+              selectDate : selectDate
+            }
           },
         );
         let data = planDataResponse.data; // response.data는 서버에서 받은 데이터입니다.
